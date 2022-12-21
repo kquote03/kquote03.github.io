@@ -1,0 +1,231 @@
+#+title: Hadoop Install
+#+author: Kenan Hassan (kenan1099 on DESKTOP-SBPFFP6)
+#+HTML_HEAD: <style>img{width: 90%} *{    font-family: 'Roboto Condensed', sans-serif; pre, src, src-C {font-family: monospace, "Source Code Pro", "Courier New", Courier;}</style>
+#+html_head: <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Roboto+Mono&display=swap" rel="stylesheet">
+* Java JDK/JRE Installation
+If you already have Java's JDK and JRE installed, then feel free to skip this section.
+
+** Getting the installer
+Java 8 is most compatible with the version of Hadoop we will use, so that's what we'll get. You can get it from Oracle, but that needs an account, so we can just use OpenJDK instead.
+
+Head over to [[https://www.openlogic.com/openjdk-downloads?field_java_parent_version_target_id=416&field_operating_system_target_id=436&field_architecture_target_id=All&field_java_package_target_id=All
+]]
+
+Openlogic maintains an updated build of OpenJDK. Select Java version 8, 64 bit, and Windows. Download both the jdk installer and jre installer.
+** Performing the installation
+Perform the installation as usual, however, make sure to set the JAVA HOME variable and the installation location as highlighted below.
+
+[[./openlogic-jdk-1.PNG]]
+
+Don't forget to repeat the installation for the JRE.
+
+* Hadoop Installation
+** Gathering resources
+*** Reasoning behind choices
+We will be using Hadoop version 3.3.0, you can try another version, however you may need to compile winutils.exe and the hadoop libraries manually, which is out of this manual's scope. If you need to compile it, then [[https://kontext.tech/article/378/compile-and-build-hadoop-321-on-windows-10-guide][this]] is a great resource.
+
+However, keep in mind, *avoid Hadoop 3.2.1 at all costs*. It contains a Windows-specific bug in HDFS, [[https://issues.apache.org/jira/browse/HDFS-14890][more info]].
+*** We will need:
+- [[https://hadoop.apache.org/release/3.3.0.html][Hadoop 3.3.0 (Download .tar.gz)]]
+- [[https://github.com/kontext-tech/winutils][Hadoop Windows specific libraries (click Download, then Download as zip)]]
+  + [[https://archive.org/details/winutils-master][(archive)]]
+- [[https://www.microsoft.com/en-us/download/details.aspx?id=40784][Microsoft Visual C++ Reditributable 2013 (Download the x86 and x64 versions. Required for Winutils)]]
+- [[https://www.7-zip.org/][7-zip (optional, WinRAR works as well)]]
+** Installing pre-requisites
+Install both the Visual C++ redistributables, and 7-zip (optional). Just run the installers and spam next.
+** Extracting Hadoop
+The Hadoop .tar.gz archive contains some leftover permissions (probably from a POSIX system) which causes some files to not be extracted properly due to insufficient permissions.
+
+To extract these files properly, we will need to run our archive utility (7zip) as administrator.
+
+[[./7zipadmin.PNG]]
+
+1. Using the file manager in 7zip, navigate to the hadoop tar.gz archive. (Computer -> C: -> Users -> <your username> -> Downloads)
+
+2. Double click the archive
+
+3. Double click the .gz file
+
+4. Select hadoop-3.3.0 and click extract
+
+    [[./7zipextractbutton.PNG]]
+
+5. For the location set it as just ~C:\~ and hit OK
+
+    [[./7ziplocation.PNG]]
+
+6. Go to ~C:\~ using Explorer and rename hadoop-3.3.0 to just hadoop
+    [[./explorerrenamehadoop.PNG]]
+
+** Setting the required environment variables for Hadoop
+1. Open the "Edit system environment variables" setting
+   [[./starteditenv.PNG]]
+
+   [[./systempropsenv.PNG]]
+
+2. Click on New for the user variables
+
+   [[./envusernew.PNG]]
+
+3. Fill as below and click OK
+
+   [[./hadoophome.PNG]]
+
+   - Variable name: HADOOP_HOME
+   - Variable value: ~C:\hadoop\bin~
+
+4. Now go to the system variables box, select PATH and click edit
+
+   [[./selectpath.PNG]]
+
+5. Add the following entries
+
+   [[./hadoopbinsbin.PNG]]
+
+   - ~C:\hadoop\bin~
+   - ~C:\hadoop\sbin~
+6. Keep clicking OK until all the windows are closed, then *log out and log back in*
+** Installing winutils and Windows-specific libraries for Hadoop
+- Extract winutils-master.zip that we downloaded earlier
+- Navigate to the version you selected, (for example, 3.3.0)
+- Copy the bin folder to C:\hadoop (merge both folders)
+- If askd to replace or merge files, click yes for all.
+** Creating HDFS data locations
+- Navigate to ~C:\hadoop~
+- Create a new folder called ~data~
+- Enter the ~data~ folder and create two subfolders ~datanode~ and ~namenode~
+
+[[./explorerdata.PNG]]
+** Configuring hadoop
+- Navigate to ~C:\hadoop\etc~ and open the following to edit, insert the following between the configuration tags.
+*** core-site.xml
+#+begin_src xml :exports code
+<property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://localhost:9000</value>
+</property>
+#+end_src
+
+
+[[./nppcoresite.PNG]]
+
+*** mapred-site.xml
+
+#+begin_src xml :exports code
+<property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+</property>
+#+end_src
+
+
+[[./mapredsite.PNG]]
+
+*** yarn-site.xml
+
+#+begin_src xml :exports code
+<property>
+  <name>yarn.nodemanager.aux-services</name>
+  <value>mapreduce_shuffle</value>
+</property>
+<property>
+  <name>yarn.nodemanager.auxservices.mapreduce.shuffle.class</name>
+  <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+</property>
+#+end_src
+
+[[./yarnsite.PNG]]
+
+*** hdfs-site.xml
+Replace the filepaths with ones that match your system if need be.
+
+
+#+begin_src xml :exports code
+
+<property>
+  <name>dfs.replication</name>
+  <value>1</value>
+</property>
+
+<property>
+    <name>dfs.datanode.failed.volumes.tolerated</name>
+    <value>0</value>
+</property>
+
+<property>
+    <name>dfs.namenode.name.dir</name>
+    <value>file:////C:/hadoop/data/namenode</value>
+</property>
+
+<property>
+  <name>dfs.datanode.data.dir</name>
+  <value>file:////C:/hadoop/data/datanode</value>
+</property>
+#+end_src
+
+[[./hdfssite.PNG]]
+
+*** Windows to URI/URL converter (optional)
+You can use this tool to convert from a Windows-style location to a URL. Use this if you decide to place your data/name nodes somewhere else. Note that this only works on the web version of this document.
+
+
+#+begin_export html
+<script>
+function convertToURI(){
+var originalLocationTextbox = document.getElementById("windowsLocation");
+var newLocation = "file:////"+originalLocationTextbox.value.replace(/\\/g,"/");
+originalLocationTextbox.value = newLocation;
+}
+</script>
+<style>
+#converter{
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+</style>
+<div id="converter"><input type="text" id="windowsLocation" size="25"/><input type="button" value="Convert" onClick="convertToURI()"/></div>
+#+end_export
+
+** Testing / Running Hadoop
+*** Initializing namenode
+- Open a CMD window
+- Type the command ~hdfs namenode -format~ and hit enter
+
+  Expected output:
+
+  [[./namenodeformat.PNG]]
+
+*** Running Hadoop
+- Open a CMD window
+- Type the command ~start-all.sh~
+- Note the port used by the Hadoop web app
+
+    [[./port.PNG]]
+
+- navigate to ~localhost:<port>~ in a web browser, in this case it's ~localhost:8042~
+
+  Expected output:
+
+  [[./browser.PNG]]
+** Troubleshooting
+*** "Java path incorrectly set" or something similar when running any hadoop command
+Make sure that your ~JAVA_HOME~ variable is set. If it's not, then set it by going to the environment variables settings (see [[Setting the required environment variables for Hadoop]]). Add a new variable, with the name ~JAVA_HOME~ and the value depends on your java installation location.
+
+If that's set correctly, then make sure that your location *has no spaces in it*. This is more of a Windows issue dating back to the DOS era, if you're not able to relocate your install, then you can use the DOS 8.3 file naming scheme, so for example 'Program Files' will be 'Progra~1'.
+*** namenode or datanode Fails to initialize or throws weird errors
+**** 1. Try to run the winutils.exe by itself
+- Navigate to ~C:\hadoop\bin~ and run winutils.exe, if you get a missing dll error, then please reinstall the Visual C++ 2013 redist. (see [[Installing pre-requisites]])
+**** 2. If winutils.exe ran fine then try the following
+- Make sure to avoid version 3.2.1 of hadoop
+- Delete the data folder inside of hadoop and recreate the folder structure ([[Creating HDFS data locations]]), this can happen randomly due to other Windows/UNIX POSIX incompatibilities involving permissions. (Especially the case if you're getting I/O Errors in the console)
+** Credits
+- Dr. Bayan Abu Shawar - Al Ain University
+
+
+
+
+#+begin_export html
+<br/><br/><br/>
+#+end_export

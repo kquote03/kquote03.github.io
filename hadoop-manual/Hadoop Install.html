@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-20 Tue 17:04 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hadoop Install</title>
+<meta name="author" content="Kenan Hassan (kenan1099 on DESKTOP-SBPFFP6)" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style>img{width: 90%} *{    font-family: 'Roboto Condensed', sans-serif; pre, src, src-C {font-family: monospace, "Source Code Pro", "Courier New", Courier;}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Roboto+Mono&display=swap" rel="stylesheet">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Hadoop Install</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge45f533">1. Java JDK/JRE Installation</a>
+<ul>
+<li><a href="#org978d6df">1.1. Getting the installer</a></li>
+<li><a href="#org4c03560">1.2. Performing the installation</a></li>
+</ul>
+</li>
+<li><a href="#orgefa7c61">2. Hadoop Installation</a>
+<ul>
+<li><a href="#orgc343cb8">2.1. Gathering resources</a>
+<ul>
+<li><a href="#orgad2c2ea">2.1.1. Reasoning behind choices</a></li>
+<li><a href="#org9f4e5e2">2.1.2. We will need:</a></li>
+</ul>
+</li>
+<li><a href="#org449c193">2.2. Installing pre-requisites</a></li>
+<li><a href="#orgecccaa3">2.3. Extracting Hadoop</a></li>
+<li><a href="#orgb94e402">2.4. Setting the required environment variables for Hadoop</a></li>
+<li><a href="#orgffd53b3">2.5. Installing winutils and Windows-specific libraries for Hadoop</a></li>
+<li><a href="#orgf7be2c6">2.6. Creating HDFS data locations</a></li>
+<li><a href="#orge78cb34">2.7. Configuring hadoop</a>
+<ul>
+<li><a href="#orgd95abc1">2.7.1. core-site.xml</a></li>
+<li><a href="#org7745bd7">2.7.2. mapred-site.xml</a></li>
+<li><a href="#org119369e">2.7.3. yarn-site.xml</a></li>
+<li><a href="#org0b00aca">2.7.4. hdfs-site.xml</a></li>
+<li><a href="#org8e2d016">2.7.5. Windows to URI/URL converter (optional)</a></li>
+</ul>
+</li>
+<li><a href="#orgab93bab">2.8. Testing / Running Hadoop</a>
+<ul>
+<li><a href="#org99b17e0">2.8.1. Initializing namenode</a></li>
+<li><a href="#orgf539594">2.8.2. Running Hadoop</a></li>
+</ul>
+</li>
+<li><a href="#orgaca45c7">2.9. Troubleshooting</a>
+<ul>
+<li><a href="#org679d62a">2.9.1. &ldquo;Java path incorrectly set&rdquo; or something similar when running any hadoop command</a></li>
+<li><a href="#orgb8fa80e">2.9.2. namenode or datanode Fails to initialize or throws weird errors</a></li>
+</ul>
+</li>
+<li><a href="#orge07ee43">2.10. Credits</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge45f533" class="outline-2">
+<h2 id="orge45f533"><span class="section-number-2">1.</span> Java JDK/JRE Installation</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+If you already have Java&rsquo;s JDK and JRE installed, then feel free to skip this section.
+</p>
+</div>
+
+<div id="outline-container-org978d6df" class="outline-3">
+<h3 id="org978d6df"><span class="section-number-3">1.1.</span> Getting the installer</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Java 8 is most compatible with the version of Hadoop we will use, so that&rsquo;s what we&rsquo;ll get. You can get it from Oracle, but that needs an account, so we can just use OpenJDK instead.
+</p>
+
+<p>
+Head over to <a href="https://www.openlogic.com/openjdk-downloads?field_java_parent_version_target_id=416&amp;field_operating_system_target_id=436&amp;field_architecture_target_id=All&amp;field_java_package_target_id=All%20">https://www.openlogic.com/openjdk-downloads?field_java_parent_version_target_id=416&amp;field_operating_system_target_id=436&amp;field_architecture_target_id=All&amp;field_java_package_target_id=All%20</a>
+</p>
+
+<p>
+Openlogic maintains an updated build of OpenJDK. Select Java version 8, 64 bit, and Windows. Download both the jdk installer and jre installer.
+</p>
+</div>
+</div>
+<div id="outline-container-org4c03560" class="outline-3">
+<h3 id="org4c03560"><span class="section-number-3">1.2.</span> Performing the installation</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Perform the installation as usual, however, make sure to set the JAVA HOME variable and the installation location as highlighted below.
+</p>
+
+
+<div id="org8f57ebc" class="figure">
+<p><img src="./openlogic-jdk-1.PNG" alt="openlogic-jdk-1.PNG" />
+</p>
+</div>
+
+<p>
+Don&rsquo;t forget to repeat the installation for the JRE.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgefa7c61" class="outline-2">
+<h2 id="orgefa7c61"><span class="section-number-2">2.</span> Hadoop Installation</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgc343cb8" class="outline-3">
+<h3 id="orgc343cb8"><span class="section-number-3">2.1.</span> Gathering resources</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-orgad2c2ea" class="outline-4">
+<h4 id="orgad2c2ea"><span class="section-number-4">2.1.1.</span> Reasoning behind choices</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+We will be using Hadoop version 3.3.0, you can try another version, however you may need to compile winutils.exe and the hadoop libraries manually, which is out of this manual&rsquo;s scope. If you need to compile it, then <a href="https://kontext.tech/article/378/compile-and-build-hadoop-321-on-windows-10-guide">this</a> is a great resource.
+</p>
+
+<p>
+However, keep in mind, <b>avoid Hadoop 3.2.1 at all costs</b>. It contains a Windows-specific bug in HDFS, <a href="https://issues.apache.org/jira/browse/HDFS-14890">more info</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org9f4e5e2" class="outline-4">
+<h4 id="org9f4e5e2"><span class="section-number-4">2.1.2.</span> We will need:</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<ul class="org-ul">
+<li><a href="https://hadoop.apache.org/release/3.3.0.html">Hadoop 3.3.0 (Download .tar.gz)</a></li>
+<li><a href="https://github.com/kontext-tech/winutils">Hadoop Windows specific libraries (click Download, then Download as zip)</a>
+<ul class="org-ul">
+<li><a href="https://archive.org/details/winutils-master">(archive)</a></li>
+</ul></li>
+<li><a href="https://www.microsoft.com/en-us/download/details.aspx?id=40784">Microsoft Visual C++ Reditributable 2013 (Download the x86 and x64 versions. Required for Winutils)</a></li>
+<li><a href="https://www.7-zip.org/">7-zip (optional, WinRAR works as well)</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org449c193" class="outline-3">
+<h3 id="org449c193"><span class="section-number-3">2.2.</span> Installing pre-requisites</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Install both the Visual C++ redistributables, and 7-zip (optional). Just run the installers and spam next.
+</p>
+</div>
+</div>
+<div id="outline-container-orgecccaa3" class="outline-3">
+<h3 id="orgecccaa3"><span class="section-number-3">2.3.</span> Extracting Hadoop</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+The Hadoop .tar.gz archive contains some leftover permissions (probably from a POSIX system) which causes some files to not be extracted properly due to insufficient permissions.
+</p>
+
+<p>
+To extract these files properly, we will need to run our archive utility (7zip) as administrator.
+</p>
+
+
+<div id="orge315783" class="figure">
+<p><img src="./7zipadmin.PNG" alt="7zipadmin.PNG" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>Using the file manager in 7zip, navigate to the hadoop tar.gz archive. (Computer -&gt; C: -&gt; Users -&gt; &lt;your username&gt; -&gt; Downloads)</li>
+
+<li>Double click the archive</li>
+
+<li>Double click the .gz file</li>
+
+<li><p>
+Select hadoop-3.3.0 and click extract
+</p>
+
+
+<div id="org6937a82" class="figure">
+<p><img src="./7zipextractbutton.PNG" alt="7zipextractbutton.PNG" />
+</p>
+</div></li>
+
+<li><p>
+For the location set it as just <code>C:\</code> and hit OK
+</p>
+
+
+<div id="org73acbec" class="figure">
+<p><img src="./7ziplocation.PNG" alt="7ziplocation.PNG" />
+</p>
+</div></li>
+
+<li>Go to <code>C:\</code> using Explorer and rename hadoop-3.3.0 to just hadoop
+<img src="./explorerrenamehadoop.PNG" alt="explorerrenamehadoop.PNG" /></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgb94e402" class="outline-3">
+<h3 id="orgb94e402"><span class="section-number-3">2.4.</span> Setting the required environment variables for Hadoop</h3>
+<div class="outline-text-3" id="text-2-4">
+<ol class="org-ol">
+<li><p>
+Open the &ldquo;Edit system environment variables&rdquo; setting
+<img src="./starteditenv.PNG" alt="starteditenv.PNG" />
+</p>
+
+
+<div id="orgfc635b4" class="figure">
+<p><img src="./systempropsenv.PNG" alt="systempropsenv.PNG" />
+</p>
+</div></li>
+
+<li><p>
+Click on New for the user variables
+</p>
+
+
+<div id="org9467757" class="figure">
+<p><img src="./envusernew.PNG" alt="envusernew.PNG" />
+</p>
+</div></li>
+
+<li><p>
+Fill as below and click OK
+</p>
+
+
+<div id="org267a63a" class="figure">
+<p><img src="./hadoophome.PNG" alt="hadoophome.PNG" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li>Variable name: HADOOP<sub>HOME</sub></li>
+<li>Variable value: <code>C:\hadoop\bin</code></li>
+</ul></li>
+
+<li><p>
+Now go to the system variables box, select PATH and click edit
+</p>
+
+
+<div id="orgd8e0c38" class="figure">
+<p><img src="./selectpath.PNG" alt="selectpath.PNG" />
+</p>
+</div></li>
+
+<li><p>
+Add the following entries
+</p>
+
+
+<div id="org346010e" class="figure">
+<p><img src="./hadoopbinsbin.PNG" alt="hadoopbinsbin.PNG" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li><code>C:\hadoop\bin</code></li>
+<li><code>C:\hadoop\sbin</code></li>
+</ul></li>
+<li>Keep clicking OK until all the windows are closed, then <b>log out and log back in</b></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgffd53b3" class="outline-3">
+<h3 id="orgffd53b3"><span class="section-number-3">2.5.</span> Installing winutils and Windows-specific libraries for Hadoop</h3>
+<div class="outline-text-3" id="text-2-5">
+<ul class="org-ul">
+<li>Extract winutils-master.zip that we downloaded earlier</li>
+<li>Navigate to the version you selected, (for example, 3.3.0)</li>
+<li>Copy the bin folder to C:\hadoop (merge both folders)</li>
+<li>If askd to replace or merge files, click yes for all.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf7be2c6" class="outline-3">
+<h3 id="orgf7be2c6"><span class="section-number-3">2.6.</span> Creating HDFS data locations</h3>
+<div class="outline-text-3" id="text-2-6">
+<ul class="org-ul">
+<li>Navigate to <code>C:\hadoop</code></li>
+<li>Create a new folder called <code>data</code></li>
+<li>Enter the <code>data</code> folder and create two subfolders <code>datanode</code> and <code>namenode</code></li>
+</ul>
+
+
+<div id="orgde4e50a" class="figure">
+<p><img src="./explorerdata.PNG" alt="explorerdata.PNG" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge78cb34" class="outline-3">
+<h3 id="orge78cb34"><span class="section-number-3">2.7.</span> Configuring hadoop</h3>
+<div class="outline-text-3" id="text-2-7">
+<ul class="org-ul">
+<li>Navigate to <code>C:\hadoop\etc</code> and open the following to edit, insert the following between the configuration tags.</li>
+</ul>
+</div>
+<div id="outline-container-orgd95abc1" class="outline-4">
+<h4 id="orgd95abc1"><span class="section-number-4">2.7.1.</span> core-site.xml</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #c678dd;">property</span>&gt;
+    &lt;<span style="color: #c678dd;">name</span>&gt;fs.defaultFS&lt;/<span style="color: #c678dd;">name</span>&gt;
+    &lt;<span style="color: #c678dd;">value</span>&gt;hdfs://localhost:9000&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+</pre>
+</div>
+
+
+
+<div id="orgba1286e" class="figure">
+<p><img src="./nppcoresite.PNG" alt="nppcoresite.PNG" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7745bd7" class="outline-4">
+<h4 id="org7745bd7"><span class="section-number-4">2.7.2.</span> mapred-site.xml</h4>
+<div class="outline-text-4" id="text-2-7-2">
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #c678dd;">property</span>&gt;
+    &lt;<span style="color: #c678dd;">name</span>&gt;mapreduce.framework.name&lt;/<span style="color: #c678dd;">name</span>&gt;
+    &lt;<span style="color: #c678dd;">value</span>&gt;yarn&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+</pre>
+</div>
+
+
+
+<div id="org356aed0" class="figure">
+<p><img src="./mapredsite.PNG" alt="mapredsite.PNG" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org119369e" class="outline-4">
+<h4 id="org119369e"><span class="section-number-4">2.7.3.</span> yarn-site.xml</h4>
+<div class="outline-text-4" id="text-2-7-3">
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #c678dd;">property</span>&gt;
+  &lt;<span style="color: #c678dd;">name</span>&gt;yarn.nodemanager.aux-services&lt;/<span style="color: #c678dd;">name</span>&gt;
+  &lt;<span style="color: #c678dd;">value</span>&gt;mapreduce_shuffle&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+&lt;<span style="color: #c678dd;">property</span>&gt;
+  &lt;<span style="color: #c678dd;">name</span>&gt;yarn.nodemanager.auxservices.mapreduce.shuffle.class&lt;/<span style="color: #c678dd;">name</span>&gt;
+  &lt;<span style="color: #c678dd;">value</span>&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+</pre>
+</div>
+
+
+<div id="org9e7f8ac" class="figure">
+<p><img src="./yarnsite.PNG" alt="yarnsite.PNG" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0b00aca" class="outline-4">
+<h4 id="org0b00aca"><span class="section-number-4">2.7.4.</span> hdfs-site.xml</h4>
+<div class="outline-text-4" id="text-2-7-4">
+<p>
+Replace the filepaths with ones that match your system if need be.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-xml">
+&lt;<span style="color: #c678dd;">property</span>&gt;
+  &lt;<span style="color: #c678dd;">name</span>&gt;dfs.replication&lt;/<span style="color: #c678dd;">name</span>&gt;
+  &lt;<span style="color: #c678dd;">value</span>&gt;1&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+
+&lt;<span style="color: #c678dd;">property</span>&gt;
+    &lt;<span style="color: #c678dd;">name</span>&gt;dfs.datanode.failed.volumes.tolerated&lt;/<span style="color: #c678dd;">name</span>&gt;
+    &lt;<span style="color: #c678dd;">value</span>&gt;0&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+
+&lt;<span style="color: #c678dd;">property</span>&gt;
+    &lt;<span style="color: #c678dd;">name</span>&gt;dfs.namenode.name.dir&lt;/<span style="color: #c678dd;">name</span>&gt;
+    &lt;<span style="color: #c678dd;">value</span>&gt;file:////C:/hadoop/data/namenode&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+
+&lt;<span style="color: #c678dd;">property</span>&gt;
+  &lt;<span style="color: #c678dd;">name</span>&gt;dfs.datanode.data.dir&lt;/<span style="color: #c678dd;">name</span>&gt;
+  &lt;<span style="color: #c678dd;">value</span>&gt;file:////C:/hadoop/data/datanode&lt;/<span style="color: #c678dd;">value</span>&gt;
+&lt;/<span style="color: #c678dd;">property</span>&gt;
+</pre>
+</div>
+
+
+<div id="org1ddb173" class="figure">
+<p><img src="./hdfssite.PNG" alt="hdfssite.PNG" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8e2d016" class="outline-4">
+<h4 id="org8e2d016"><span class="section-number-4">2.7.5.</span> Windows to URI/URL converter (optional)</h4>
+<div class="outline-text-4" id="text-2-7-5">
+<p>
+You can use this tool to convert from a Windows-style location to a URL. Use this if you decide to place your data/name nodes somewhere else. Note that this only works on the web version of this document.
+</p>
+
+
+<script>
+function convertToURI(){
+var originalLocationTextbox = document.getElementById("windowsLocation");
+var newLocation = "file:////"+originalLocationTextbox.value.replace(/\\/g,"/");
+originalLocationTextbox.value = newLocation;
+}
+</script>
+<style>
+#converter{
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+</style>
+<div id="converter"><input type="text" id="windowsLocation" size="25"/><input type="button" value="Convert" onClick="convertToURI()"/></div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgab93bab" class="outline-3">
+<h3 id="orgab93bab"><span class="section-number-3">2.8.</span> Testing / Running Hadoop</h3>
+<div class="outline-text-3" id="text-2-8">
+</div>
+<div id="outline-container-org99b17e0" class="outline-4">
+<h4 id="org99b17e0"><span class="section-number-4">2.8.1.</span> Initializing namenode</h4>
+<div class="outline-text-4" id="text-2-8-1">
+<ul class="org-ul">
+<li>Open a CMD window</li>
+<li><p>
+Type the command <code>hdfs namenode -format</code> and hit enter
+</p>
+
+<p>
+Expected output:
+</p>
+
+
+<div id="org11ce3ac" class="figure">
+<p><img src="./namenodeformat.PNG" alt="namenodeformat.PNG" />
+</p>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf539594" class="outline-4">
+<h4 id="orgf539594"><span class="section-number-4">2.8.2.</span> Running Hadoop</h4>
+<div class="outline-text-4" id="text-2-8-2">
+<ul class="org-ul">
+<li>Open a CMD window</li>
+<li>Type the command <code>start-all.sh</code></li>
+<li><p>
+Note the port used by the Hadoop web app
+</p>
+
+
+<div id="orgb9e0294" class="figure">
+<p><img src="./port.PNG" alt="port.PNG" />
+</p>
+</div></li>
+
+<li><p>
+navigate to <code>localhost:&lt;port&gt;</code> in a web browser, in this case it&rsquo;s <code>localhost:8042</code>
+</p>
+
+<p>
+Expected output:
+</p>
+
+
+<div id="org5700270" class="figure">
+<p><img src="./browser.PNG" alt="browser.PNG" />
+</p>
+</div></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaca45c7" class="outline-3">
+<h3 id="orgaca45c7"><span class="section-number-3">2.9.</span> Troubleshooting</h3>
+<div class="outline-text-3" id="text-2-9">
+</div>
+<div id="outline-container-org679d62a" class="outline-4">
+<h4 id="org679d62a"><span class="section-number-4">2.9.1.</span> &ldquo;Java path incorrectly set&rdquo; or something similar when running any hadoop command</h4>
+<div class="outline-text-4" id="text-2-9-1">
+<p>
+Make sure that your <code>JAVA_HOME</code> variable is set. If it&rsquo;s not, then set it by going to the environment variables settings (see <a href="#orgb94e402">2.4</a>). Add a new variable, with the name <code>JAVA_HOME</code> and the value depends on your java installation location.
+</p>
+
+<p>
+If that&rsquo;s set correctly, then make sure that your location <b>has no spaces in it</b>. This is more of a Windows issue dating back to the DOS era, if you&rsquo;re not able to relocate your install, then you can use the DOS 8.3 file naming scheme, so for example &rsquo;Program Files&rsquo; will be &rsquo;Progra~1&rsquo;.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb8fa80e" class="outline-4">
+<h4 id="orgb8fa80e"><span class="section-number-4">2.9.2.</span> namenode or datanode Fails to initialize or throws weird errors</h4>
+<div class="outline-text-4" id="text-2-9-2">
+</div>
+<ol class="org-ol">
+<li><a id="org65ceb08"></a>1. Try to run the winutils.exe by itself<br />
+<div class="outline-text-5" id="text-2-9-2-1">
+<ul class="org-ul">
+<li>Navigate to <code>C:\hadoop\bin</code> and run winutils.exe, if you get a missing dll error, then please reinstall the Visual C++ 2013 redist. (see <a href="#org449c193">2.2</a>)</li>
+</ul>
+</div>
+</li>
+<li><a id="orgcb3b11e"></a>2. If winutils.exe ran fine then try the following<br />
+<div class="outline-text-5" id="text-2-9-2-2">
+<ul class="org-ul">
+<li>Make sure to avoid version 3.2.1 of hadoop</li>
+<li>Delete the data folder inside of hadoop and recreate the folder structure (<a href="#orgf7be2c6">2.6</a>), this can happen randomly due to other Windows/UNIX POSIX incompatibilities involving permissions. (Especially the case if you&rsquo;re getting I/O Errors in the console)</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orge07ee43" class="outline-3">
+<h3 id="orge07ee43"><span class="section-number-3">2.10.</span> Credits</h3>
+<div class="outline-text-3" id="text-2-10">
+<ul class="org-ul">
+<li>Dr. Bayan Abu Shawar - Al Ain University</li>
+</ul>
+
+
+
+
+<br/><br/><br/>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Kenan Hassan (kenan1099 on DESKTOP-SBPFFP6)</p>
+<p class="date">Created: 2022-12-20 Tue 17:04</p>
+</div>
+</body>
+</html>
