@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-12 Thu 20:08 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lect1 - Bag ADT</title>
+<meta name="author" content="Kenan Ismail" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Lect1 - Bag ADT</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org58e0950">1. What IS an array??</a></li>
+<li><a href="#org10dca48">2. Bags</a>
+<ul>
+<li><a href="#orgd4a875b">2.1. Bag operations (interface)</a></li>
+<li><a href="#orgccb8e3d">2.2. add</a></li>
+<li><a href="#orgecaa964">2.3. retrieve / remove</a></li>
+<li><a href="#org26cbaf2">2.4. retrieve / remove (specific)</a></li>
+<li><a href="#orga1cd22f">2.5. get number of items</a></li>
+<li><a href="#org2d37d24">2.6. is bag full</a></li>
+<li><a href="#orgc732f57">2.7. get frequency</a></li>
+</ul>
+</li>
+<li><a href="#orga5f0e5e">3. Implementation</a>
+<ul>
+<li><a href="#org8c9a636">3.1. A function to print all items in the bag whilst destroying the bag</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org58e0950" class="outline-2">
+<h2 id="org58e0950"><span class="section-number-2">1.</span> What IS an array??</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+It is a contiguous fixed strip of memory. We <b>must</b> specify the size of an array.
+</p>
+</div>
+</div>
+<div id="outline-container-org10dca48" class="outline-2">
+<h2 id="org10dca48"><span class="section-number-2">2.</span> Bags</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+A simple &rsquo;container&rsquo; that:
+</p>
+
+<ul class="org-ul">
+<li><b>Doesn&rsquo;t store order</b></li>
+<li><b>Allows for repetition</b></li>
+</ul>
+</div>
+<div id="outline-container-orgd4a875b" class="outline-3">
+<h3 id="orgd4a875b"><span class="section-number-3">2.1.</span> Bag operations (interface)</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-center">
+<p>
+Please note that these are not valid method names. Actual method naming depends on the programming language.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgccb8e3d" class="outline-3">
+<h3 id="orgccb8e3d"><span class="section-number-3">2.2.</span> add</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Adds an item to the bag, adds it after the last item. It returns &rsquo;true&rsquo; if the item was indeed added, false if something went amiss.
+</p>
+</div>
+</div>
+<div id="outline-container-orgecaa964" class="outline-3">
+<h3 id="orgecaa964"><span class="section-number-3">2.3.</span> retrieve / remove</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Retrieves an item from the bag. It always gets the last item, since anyways we don&rsquo;t keep track of order, and any other way will take more instructions (steps) since we will be leaving a gap in the array.
+</p>
+</div>
+</div>
+<div id="outline-container-org26cbaf2" class="outline-3">
+<h3 id="org26cbaf2"><span class="section-number-3">2.4.</span> retrieve / remove (specific)</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Looks for the specified item, and retrieves the first instance it finds of the item. This leaves a gap, the strat to combat this is replacing the gap with the last item.
+</p>
+
+<p>
+We do <b>not</b> do this because let&rsquo;s say we have 10000 items, then that would mean we need to shift 9999 times! The other method just takes 1 instruction.
+</p>
+</div>
+</div>
+<div id="outline-container-orga1cd22f" class="outline-3">
+<h3 id="orga1cd22f"><span class="section-number-3">2.5.</span> get number of items</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Retrieves the number of items in the bag
+</p>
+</div>
+</div>
+<div id="outline-container-org2d37d24" class="outline-3">
+<h3 id="org2d37d24"><span class="section-number-3">2.6.</span> is bag full</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Tells us if the bag is full, we just compare the number of items to the size of the array.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc732f57" class="outline-3">
+<h3 id="orgc732f57"><span class="section-number-3">2.7.</span> get frequency</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Tells us how many times an item is present in a bag.
+</p>
+
+<p>
+We will use the simple way of looping over the whole bag, keeping a counter, and incrementing the counter each time the item matches the current item in the loop.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga5f0e5e" class="outline-2">
+<h2 id="orga5f0e5e"><span class="section-number-2">3.</span> Implementation</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+We need to know the size of the bag. Since we are implementing bags using an array, we can ask the user to specify the size of the array, or at least set the default size.
+</p>
+
+<p>
+Since we must also specify the data type of the array, we can use the &rsquo;Object&rsquo; type to encompass all other types.
+</p>
+
+<p>
+We also need to implement a counter to know the location of the last item.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ECBE7B;">BagInterface</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">attendance</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">ArrayBag</span><span style="color: #51afef;">(</span><span style="color: #da8548; font-weight: bold;">10</span><span style="color: #51afef;">)</span>;
+System.out.println<span style="color: #51afef;">(</span>attendance.isEmpty<span style="color: #c678dd;">()</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Should return true at this point</span>
+System.out.println<span style="color: #51afef;">(</span>attendance.getCurrentSize<span style="color: #c678dd;">()</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Should return 0 at this point</span>
+<span style="color: #5B6268;">/* </span><span style="color: #5B6268;">The output of the above code is NOT 10,</span>
+<span style="color: #5B6268;">  10 is the size of the array, NOT the Bag.</span>
+<span style="color: #5B6268;">*/</span>
+
+attendance.add<span style="color: #51afef;">(</span><span style="color: #98be65;">"Shaima"</span><span style="color: #51afef;">)</span>;
+attendance.add<span style="color: #51afef;">(</span><span style="color: #98be65;">"Raghad"</span><span style="color: #51afef;">)</span>;
+attendance.add<span style="color: #51afef;">(</span><span style="color: #98be65;">"Raghad"</span><span style="color: #51afef;">)</span>;
+
+System.out.println<span style="color: #51afef;">(</span>attendance.isEmpty<span style="color: #c678dd;">()</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Should return false at this point</span>
+System.out.println<span style="color: #51afef;">(</span>attendance.getCurrentSize<span style="color: #c678dd;">()</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Should return 3 at this point</span>
+
+System.out.println<span style="color: #51afef;">(</span>attendance.remove<span style="color: #c678dd;">()</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Should return "Raghad"</span>
+System.out.println<span style="color: #51afef;">(</span>attendance.getCurrentSize<span style="color: #c678dd;">()</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Should return 2 at this point</span>
+
+<span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>; i&lt;<span style="color: #da8548; font-weight: bold;">10</span>, <span style="color: #ECBE7B;">i</span>++<span style="color: #51afef;">){</span>
+attendance.add<span style="color: #c678dd;">(</span><span style="color: #98be65;">"Mohammed"</span><span style="color: #c678dd;">)</span>;
+    <span style="color: #51afef;">}</span> <span style="color: #5B6268;">//</span><span style="color: #5B6268;">This will only add 7 "Mohammed" because after the 8th the bag will be full.</span>
+
+System.out.println<span style="color: #51afef;">(</span>attendance.add<span style="color: #c678dd;">(</span><span style="color: #98be65;">"Mohanad"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Returns false because the bag is full now.</span>
+
+System.out.println<span style="color: #51afef;">(</span>attendance.remove<span style="color: #c678dd;">(</span><span style="color: #98be65;">"Raghad"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">This version of the overloaded method 'remove'</span>
+<span style="color: #5B6268;">//</span><span style="color: #5B6268;">returns either true or false if the item was removed.</span>
+
+printBag<span style="color: #51afef;">(</span>attendance<span style="color: #51afef;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">this will print all the items from bottom to top (Mohammed 8 times, Raghad, Shaima)</span>
+
+attendance.remove<span style="color: #51afef;">(</span><span style="color: #98be65;">"Raghad"</span><span style="color: #51afef;">)</span>;
+printBag<span style="color: #51afef;">(</span>attendance<span style="color: #51afef;">)</span>;
+<span style="color: #5B6268;">/* </span><span style="color: #5B6268;">This will print Mohammed 7 times, then instead of Raghad, we print another Mohammed, then Shaima</span>
+<span style="color: #5B6268;"> */</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org8c9a636" class="outline-3">
+<h3 id="org8c9a636"><span class="section-number-3">3.1.</span> A function to print all items in the bag whilst destroying the bag</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">printBag</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">BagInterface</span> <span style="color: #dcaeea;">bag</span><span style="color: #51afef;">){</span>
+<span style="color: #51afef;">while</span><span style="color: #c678dd;">(</span><span style="color: #51afef; font-weight: bold;">!</span>bag.isEmpty<span style="color: #98be65;">()</span><span style="color: #c678dd;">){</span>
+        System.out.println<span style="color: #98be65;">(</span>bag.remove<span style="color: #a9a1e1;">()</span><span style="color: #98be65;">)</span>;
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+
+<span style="color: #5B6268;">/*</span><span style="color: #5B6268;">This continuously prints the last item,</span>
+<span style="color: #5B6268;">  and removes it. It stops until the bag</span>
+<span style="color: #5B6268;">  is empty.</span>
+<span style="color: #5B6268;">*/</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Kenan Ismail</p>
+<p class="date">Created: 2023-01-12 Thu 20:09</p>
+</div>
+</body>
+</html>
