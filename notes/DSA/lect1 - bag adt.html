@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-01-12 Thu 20:08 -->
+<!-- 2023-01-15 Sun 18:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lect1 - Bag ADT</title>
@@ -201,36 +201,36 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org58e0950">1. What IS an array??</a></li>
-<li><a href="#org10dca48">2. Bags</a>
+<li><a href="#org67eb79b">1. What IS an array??</a></li>
+<li><a href="#org07ce86b">2. Bags</a>
 <ul>
-<li><a href="#orgd4a875b">2.1. Bag operations (interface)</a></li>
-<li><a href="#orgccb8e3d">2.2. add</a></li>
-<li><a href="#orgecaa964">2.3. retrieve / remove</a></li>
-<li><a href="#org26cbaf2">2.4. retrieve / remove (specific)</a></li>
-<li><a href="#orga1cd22f">2.5. get number of items</a></li>
-<li><a href="#org2d37d24">2.6. is bag full</a></li>
-<li><a href="#orgc732f57">2.7. get frequency</a></li>
+<li><a href="#org2892ed4">2.1. Bag operations (interface)</a></li>
+<li><a href="#org54e5e97">2.2. add</a></li>
+<li><a href="#org0feaa18">2.3. retrieve / remove</a></li>
+<li><a href="#orga9fe4ee">2.4. retrieve / remove (specific)</a></li>
+<li><a href="#org135ce7a">2.5. get number of items</a></li>
+<li><a href="#org8f3e608">2.6. is bag full</a></li>
+<li><a href="#org1ce6c1f">2.7. get frequency</a></li>
 </ul>
 </li>
-<li><a href="#orga5f0e5e">3. Implementation</a>
+<li><a href="#org802563d">3. Implementation</a>
 <ul>
-<li><a href="#org8c9a636">3.1. A function to print all items in the bag whilst destroying the bag</a></li>
+<li><a href="#orgbb6a2ec">3.1. A function to print all items in the bag whilst destroying the bag</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org58e0950" class="outline-2">
-<h2 id="org58e0950"><span class="section-number-2">1.</span> What IS an array??</h2>
+<div id="outline-container-org67eb79b" class="outline-2">
+<h2 id="org67eb79b"><span class="section-number-2">1.</span> What IS an array??</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 It is a contiguous fixed strip of memory. We <b>must</b> specify the size of an array.
 </p>
 </div>
 </div>
-<div id="outline-container-org10dca48" class="outline-2">
-<h2 id="org10dca48"><span class="section-number-2">2.</span> Bags</h2>
+<div id="outline-container-org07ce86b" class="outline-2">
+<h2 id="org07ce86b"><span class="section-number-2">2.</span> Bags</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 A simple &rsquo;container&rsquo; that:
@@ -241,8 +241,8 @@ A simple &rsquo;container&rsquo; that:
 <li><b>Allows for repetition</b></li>
 </ul>
 </div>
-<div id="outline-container-orgd4a875b" class="outline-3">
-<h3 id="orgd4a875b"><span class="section-number-3">2.1.</span> Bag operations (interface)</h3>
+<div id="outline-container-org2892ed4" class="outline-3">
+<h3 id="org2892ed4"><span class="section-number-3">2.1.</span> Bag operations (interface)</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-center">
 <p>
@@ -252,52 +252,52 @@ Please note that these are not valid method names. Actual method naming depends 
 </div>
 </div>
 
-<div id="outline-container-orgccb8e3d" class="outline-3">
-<h3 id="orgccb8e3d"><span class="section-number-3">2.2.</span> add</h3>
+<div id="outline-container-org54e5e97" class="outline-3">
+<h3 id="org54e5e97"><span class="section-number-3">2.2.</span> add</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Adds an item to the bag, adds it after the last item. It returns &rsquo;true&rsquo; if the item was indeed added, false if something went amiss.
 </p>
 </div>
 </div>
-<div id="outline-container-orgecaa964" class="outline-3">
-<h3 id="orgecaa964"><span class="section-number-3">2.3.</span> retrieve / remove</h3>
+<div id="outline-container-org0feaa18" class="outline-3">
+<h3 id="org0feaa18"><span class="section-number-3">2.3.</span> retrieve / remove</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Retrieves an item from the bag. It always gets the last item, since anyways we don&rsquo;t keep track of order, and any other way will take more instructions (steps) since we will be leaving a gap in the array.
 </p>
 </div>
 </div>
-<div id="outline-container-org26cbaf2" class="outline-3">
-<h3 id="org26cbaf2"><span class="section-number-3">2.4.</span> retrieve / remove (specific)</h3>
+<div id="outline-container-orga9fe4ee" class="outline-3">
+<h3 id="orga9fe4ee"><span class="section-number-3">2.4.</span> retrieve / remove (specific)</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
-Looks for the specified item, and retrieves the first instance it finds of the item. This leaves a gap, the strat to combat this is replacing the gap with the last item.
+Looks for the specified item, and retrieves the first instance it finds of the item. This leaves a gap, the strategy to combat this is replacing the gap with the last item.
 </p>
 
 <p>
-We do <b>not</b> do this because let&rsquo;s say we have 10000 items, then that would mean we need to shift 9999 times! The other method just takes 1 instruction.
+We do this because let&rsquo;s say we have 10000 items, then to eliminate the gap we would otherwise have to shift the items below the gap potentially 9999 times! The other method just takes 1 instruction, and has 0 consequence because a bag was never meant to retain order to begin with.
 </p>
 </div>
 </div>
-<div id="outline-container-orga1cd22f" class="outline-3">
-<h3 id="orga1cd22f"><span class="section-number-3">2.5.</span> get number of items</h3>
+<div id="outline-container-org135ce7a" class="outline-3">
+<h3 id="org135ce7a"><span class="section-number-3">2.5.</span> get number of items</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Retrieves the number of items in the bag
 </p>
 </div>
 </div>
-<div id="outline-container-org2d37d24" class="outline-3">
-<h3 id="org2d37d24"><span class="section-number-3">2.6.</span> is bag full</h3>
+<div id="outline-container-org8f3e608" class="outline-3">
+<h3 id="org8f3e608"><span class="section-number-3">2.6.</span> is bag full</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Tells us if the bag is full, we just compare the number of items to the size of the array.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc732f57" class="outline-3">
-<h3 id="orgc732f57"><span class="section-number-3">2.7.</span> get frequency</h3>
+<div id="outline-container-org1ce6c1f" class="outline-3">
+<h3 id="org1ce6c1f"><span class="section-number-3">2.7.</span> get frequency</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 Tells us how many times an item is present in a bag.
@@ -310,8 +310,8 @@ We will use the simple way of looping over the whole bag, keeping a counter, and
 </div>
 </div>
 
-<div id="outline-container-orga5f0e5e" class="outline-2">
-<h2 id="orga5f0e5e"><span class="section-number-2">3.</span> Implementation</h2>
+<div id="outline-container-org802563d" class="outline-2">
+<h2 id="org802563d"><span class="section-number-2">3.</span> Implementation</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 We need to know the size of the bag. Since we are implementing bags using an array, we can ask the user to specify the size of the array, or at least set the default size.
@@ -362,8 +362,8 @@ printBag<span style="color: #51afef;">(</span>attendance<span style="color: #51a
 </div>
 </div>
 
-<div id="outline-container-org8c9a636" class="outline-3">
-<h3 id="org8c9a636"><span class="section-number-3">3.1.</span> A function to print all items in the bag whilst destroying the bag</h3>
+<div id="outline-container-orgbb6a2ec" class="outline-3">
+<h3 id="orgbb6a2ec"><span class="section-number-3">3.1.</span> A function to print all items in the bag whilst destroying the bag</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">printBag</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">BagInterface</span> <span style="color: #dcaeea;">bag</span><span style="color: #51afef;">){</span>
@@ -384,7 +384,7 @@ printBag<span style="color: #51afef;">(</span>attendance<span style="color: #51a
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Kenan Ismail</p>
-<p class="date">Created: 2023-01-12 Thu 20:09</p>
+<p class="date">Created: 2023-01-15 Sun 18:16</p>
 </div>
 </body>
 </html>
