@@ -3,8 +3,24 @@
   <head>
     <meta charset="utf-8"/>
     <title>kQuote's personal page</title>
+    <style type="text/css">
+     @keyframes act{
+       from {letter-spacing: 5em;}
+       to {letter-spacing 1em;}
+     }
+     @keyframes rainbow{
+       0% {color: red;}
+       50% {color: green;}
+       100% {color: blue;}
+     }
+     h1{
+/*       animation-name: act;
+       animation-duration: 3s;*/
+       animation: act 3s, rainbow 3s infinite;
+     }
+    </style>
   </head>
-  
+
   <body>
     <h1>DOILUS PAGE?!?!</h1>
     <audio autoplay>
@@ -27,4 +43,4 @@
     </ul>
   </body>
   
-</html?
+</html>
