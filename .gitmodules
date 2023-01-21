@@ -1,0 +1,3 @@
+[submodule "webdev-notes"]
+	path = webdev-notes
+	url = https://github.com/kquote03/webdev-notes
