@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-22 Wed 11:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lect10 Sorting</title>
+<meta name="author" content="Kenan Ismail" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Lect10 Sorting</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org284b144">1. Merge sort</a>
+<ul>
+<li><a href="#orgc65bcf5">1.1. Merging two sorted arrays into one big one</a>
+<ul>
+<li><a href="#orgf824035">1.1.1. Implementation</a></li>
+<li><a href="#org6c08677">1.1.2. Complexity</a></li>
+</ul>
+</li>
+<li><a href="#org77ad18d">1.2. Dividing an array</a></li>
+<li><a href="#org291cc4b">1.3. Recombine the array</a></li>
+<li><a href="#org3ee8b13">1.4. Complexity</a></li>
+<li><a href="#org79daa2b">1.5. Application</a></li>
+</ul>
+</li>
+<li><a href="#orgc9fd191">2. Quicksort</a>
+<ul>
+<li><a href="#org03d7faf">2.1. Complexity</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org284b144" class="outline-2">
+<h2 id="org284b144"><span class="section-number-2">1.</span> Merge sort</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>Uses &ldquo;Divide and Conquer&rdquo; paradigm</li>
+<li>The algorithm is divided into two parts</li>
+<li>Used to merge two <b>already sorted</b> arrays into one big one.</li>
+</ul>
+</div>
+<div id="outline-container-orgc65bcf5" class="outline-3">
+<h3 id="orgc65bcf5"><span class="section-number-3">1.1.</span> Merging two sorted arrays into one big one</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>Index of first array let&rsquo;s say is n</li>
+<li>For the second it&rsquo;s m</li>
+<li>First of all we compare the first two items</li>
+<li>We copy the smaller item, let&rsquo;s say m had the smaller item, so now we increment m by 1</li>
+<li>We don&rsquo;t increment n we continue comparing until an item in m is larger than n, only then can we increment n</li>
+</ul>
+</div>
+<div id="outline-container-orgf824035" class="outline-4">
+<h4 id="orgf824035"><span class="section-number-4">1.1.1.</span> Implementation</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">int</span><span style="color: #51afef;">[]</span> <span style="color: #c678dd;">merge</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span><span style="color: #c678dd;">[]</span> <span style="color: #dcaeea;">A</span>, <span style="color: #ECBE7B;">int</span><span style="color: #c678dd;">[]</span> <span style="color: #dcaeea;">B</span><span style="color: #51afef;">){</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">C</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">int</span><span style="color: #c678dd;">[</span>A.length * <span style="color: #da8548; font-weight: bold;">2</span><span style="color: #c678dd;">]</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">The 'sum' array, we have a condition that A and B must be of the same size</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">L</span> = <span style="color: #da8548; font-weight: bold;">0</span>;
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">R</span> = <span style="color: #da8548; font-weight: bold;">0</span>;
+
+<span style="color: #5B6268;">/*    </span><span style="color: #5B6268;">while(L&lt;A.length &amp;&amp; R&lt;B.length){</span>
+<span style="color: #5B6268;">        if()</span>
+<span style="color: #5B6268;">    }</span>
+<span style="color: #5B6268;">*/</span>
+    <span style="color: #51afef;">for</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">L</span> = <span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">R</span> = <span style="color: #da8548; font-weight: bold;">0</span>; L&lt;A.<span style="color: #ECBE7B;">length</span> &amp;&amp; R&lt;B.<span style="color: #ECBE7B;">length</span>; i++<span style="color: #c678dd;">){</span>
+        <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>A<span style="color: #a9a1e1;">[</span>L<span style="color: #a9a1e1;">]</span> &lt; B<span style="color: #a9a1e1;">[</span>R<span style="color: #a9a1e1;">]</span><span style="color: #98be65;">){</span>
+            C<span style="color: #a9a1e1;">[</span>i<span style="color: #a9a1e1;">]</span> = A<span style="color: #a9a1e1;">[</span>L<span style="color: #a9a1e1;">]</span>;
+            L++;
+        <span style="color: #98be65;">}</span>
+        <span style="color: #51afef;">else</span><span style="color: #98be65;">{</span>
+            C<span style="color: #a9a1e1;">[</span>i<span style="color: #a9a1e1;">]</span> = B<span style="color: #a9a1e1;">[</span>R<span style="color: #a9a1e1;">]</span>;
+            R++;
+        <span style="color: #98be65;">}</span>
+        <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>L == A.length - <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">){</span>
+            <span style="color: #51afef;">for</span><span style="color: #a9a1e1;">()</span>
+           <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+
+
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6c08677" class="outline-4">
+<h4 id="org6c08677"><span class="section-number-4">1.1.2.</span> Complexity</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+\(O(n)\)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org77ad18d" class="outline-3">
+<h3 id="org77ad18d"><span class="section-number-3">1.2.</span> Dividing an array</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+How many times we divide is \(k = \log_2 n\)
+</p>
+</div>
+</div>
+<div id="outline-container-org291cc4b" class="outline-3">
+<h3 id="org291cc4b"><span class="section-number-3">1.3.</span> Recombine the array</h3>
+</div>
+<div id="outline-container-org3ee8b13" class="outline-3">
+<h3 id="org3ee8b13"><span class="section-number-3">1.4.</span> Complexity</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>Best Case: \(O(n \log n)\)</li>
+<li>Avg Case: \(O(n \log n)\)</li>
+<li>Worst Case: \(O(n \log n)\)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org79daa2b" class="outline-3">
+<h3 id="org79daa2b"><span class="section-number-3">1.5.</span> Application</h3>
+<div class="outline-text-3" id="text-1-5">
+<ul class="org-ul">
+<li>Finding median, fastest way is to sort the array of numbers</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc9fd191" class="outline-2">
+<h2 id="orgc9fd191"><span class="section-number-2">2.</span> Quicksort</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>We pick one element called the pivot, any element
+<ul class="org-ul">
+<li>If every element to the left is less than the first pivot and all the elements to right are greater, then the pivot has reached the final destination</li>
+</ul></li>
+<li>Find the position of the pivot in the final sorted array</li>
+<li>Then divide the array like in merge sort (keep dividing)</li>
+<li>Find the pivot of the newly divided array</li>
+<li>Keep dividing and finding the pivot</li>
+<li>Merge the arrays</li>
+</ul>
+</div>
+<div id="outline-container-org03d7faf" class="outline-3">
+<h3 id="org03d7faf"><span class="section-number-3">2.1.</span> Complexity</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>Worst case: \(O(n^2)\) (when our pivot is always coming at the end)</li>
+<li>Average case: \(O(n \log n)\)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Kenan Ismail</p>
+<p class="date">Created: 2023-03-22 Wed 11:50</p>
+</div>
+</body>
+</html>

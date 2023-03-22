@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-22 Wed 11:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lect6 Stack ADT</title>
+<meta name="author" content="Kenan Ismail" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Lect6 Stack ADT</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orga202eeb">1. Stack</a>
+<ul>
+<li><a href="#org3104837">1.1. Interface</a>
+<ul>
+<li><a href="#orgf9a0f04">1.1.1. void push(T data)</a></li>
+<li><a href="#org627992d">1.1.2. T pop()</a></li>
+<li><a href="#org32a8343">1.1.3. T peek()</a></li>
+<li><a href="#orgbe24aa7">1.1.4. bool isEmpty()</a></li>
+</ul>
+</li>
+<li><a href="#orgcfc7812">1.2. Implementation details</a>
+<ul>
+<li><a href="#org91cf5da">1.2.1. Array or Linked Chain</a></li>
+<li><a href="#org9d35534">1.2.2. Efficiency</a></li>
+</ul>
+</li>
+<li><a href="#org4f12f6b">1.3. Applications of stack</a></li>
+</ul>
+</li>
+<li><a href="#org92e20d1">2. Infix notation</a></li>
+<li><a href="#org846c394">3. Suffix notation (RPN)</a></li>
+<li><a href="#org83da654">4. Check balanced text</a></li>
+<li><a href="#orgb6fdc99">5. Reversing a stack</a></li>
+<li><a href="#org213f5e6">6. Finding the maximum number in a stack</a></li>
+<li><a href="#org9150803">7. Palindrome checker</a></li>
+<li><a href="#orgcf0cd58">8. Recursive algorithms</a>
+<ul>
+<li><a href="#org5ece896">8.1. Recursive algorithm for sum</a></li>
+<li><a href="#org56044d2">8.2. Recursive algorithm for countdown</a>
+<ul>
+<li><a href="#org9fdb7a8">8.2.1. Putting the print statement after the recursive order</a></li>
+</ul>
+</li>
+<li><a href="#orgaec8b1c">8.3. Overall</a></li>
+<li><a href="#orgec10b3d">8.4. Uses</a></li>
+</ul>
+</li>
+<li><a href="#org3304bc6">9. Extra notes</a>
+<ul>
+<li><a href="#org154cb20">9.1. Context Free Grammar</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+For every program,
+</p>
+<div id="outline-container-orga202eeb" class="outline-2">
+<h2 id="orga202eeb"><span class="section-number-2">1.</span> Stack</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Data structure which maintains the added data in a LIFO (Last In First Out ) order
+</p>
+
+<p>
+Note: This is the opposite of FIFO (Queue)
+</p>
+
+<p>
+You can only access the last added element.
+</p>
+</div>
+<div id="outline-container-org3104837" class="outline-3">
+<h3 id="org3104837"><span class="section-number-3">1.1.</span> Interface</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-orgf9a0f04" class="outline-4">
+<h4 id="orgf9a0f04"><span class="section-number-4">1.1.1.</span> void push(T data)</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Add item to the top of the stack
+</p>
+</div>
+</div>
+<div id="outline-container-org627992d" class="outline-4">
+<h4 id="org627992d"><span class="section-number-4">1.1.2.</span> T pop()</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Remove the last item from the top of the stack
+</p>
+</div>
+</div>
+<div id="outline-container-org32a8343" class="outline-4">
+<h4 id="org32a8343"><span class="section-number-4">1.1.3.</span> T peek()</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+Retrieves the last item from the top of the stack without removing it.
+</p>
+</div>
+</div>
+<div id="outline-container-orgbe24aa7" class="outline-4">
+<h4 id="orgbe24aa7"><span class="section-number-4">1.1.4.</span> bool isEmpty()</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+tells us if the stack is empty or if it&rsquo;s not
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcfc7812" class="outline-3">
+<h3 id="orgcfc7812"><span class="section-number-3">1.2.</span> Implementation details</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-org91cf5da" class="outline-4">
+<h4 id="org91cf5da"><span class="section-number-4">1.2.1.</span> Array or Linked Chain</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+We will always use linked chain because the size is constantly varying.
+</p>
+</div>
+</div>
+<div id="outline-container-org9d35534" class="outline-4">
+<h4 id="org9d35534"><span class="section-number-4">1.2.2.</span> Efficiency</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+<code>push()</code> and <code>pop()</code> are \(O(1)\)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org4f12f6b" class="outline-3">
+<h3 id="org4f12f6b"><span class="section-number-3">1.3.</span> Applications of stack</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>Undo</li>
+<li>Check balanced text</li>
+<li>Program stack</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org92e20d1" class="outline-2">
+<h2 id="org92e20d1"><span class="section-number-2">2.</span> Infix notation</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The normal &ldquo;math&rdquo; notation like 4+1, or 5*5
+</p>
+</div>
+</div>
+<div id="outline-container-org846c394" class="outline-2">
+<h2 id="org846c394"><span class="section-number-2">3.</span> Suffix notation (RPN)</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+What we understand is 4+1 is written as 1 4 +
+</p>
+</div>
+</div>
+<div id="outline-container-org83da654" class="outline-2">
+<h2 id="org83da654"><span class="section-number-2">4.</span> Check balanced text</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Algorithm:
+</p>
+<ol class="org-ol">
+<li>Read text</li>
+<li>If symbol is open ([{, then push it to the stack</li>
+<li>Continue reading</li>
+<li>If symbol is closed }]), then pop from the stack and compare</li>
+<li>Finally if the stack is empty, then the text is balanced, otherwise, it&rsquo;s not.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgb6fdc99" class="outline-2">
+<h2 id="orgb6fdc99"><span class="section-number-2">5.</span> Reversing a stack</h2>
+<div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-java">    ReverseStack<span style="color: #51afef;">(</span><span style="color: #ECBE7B;">StackInterface</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">s</span><span style="color: #51afef;">){</span>
+        <span style="color: #ECBE7B;">StackInterface</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">s2</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">LinkedStack</span><span style="color: #c678dd;">()</span>;
+        <span style="color: #51afef;">while</span><span style="color: #c678dd;">(</span><span style="color: #51afef; font-weight: bold;">!</span>s.isEmpty<span style="color: #c678dd;">){</span>
+            s2.push<span style="color: #98be65;">(</span>s.pop<span style="color: #a9a1e1;">()</span><span style="color: #98be65;">)</span>;
+        <span style="color: #c678dd;">}</span>
+        <span style="color: #51afef;">return</span> s2;
+    <span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org213f5e6" class="outline-2">
+<h2 id="org213f5e6"><span class="section-number-2">6.</span> Finding the maximum number in a stack</h2>
+<div class="outline-text-2" id="text-6">
+<div class="org-src-container">
+<pre class="src src-java">RemoveMax<span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Stack</span> <span style="color: #dcaeea;">s</span><span style="color: #51afef;">){</span>
+    <span style="color: #ECBE7B;">LinkedStack</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">s2</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">LinkedStack</span><span style="color: #c678dd;">&lt;&gt;()</span>;
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">max</span> = s.peek<span style="color: #c678dd;">()</span>;
+    <span style="color: #51afef;">while</span><span style="color: #c678dd;">(</span><span style="color: #51afef; font-weight: bold;">!</span>s.isEmpty<span style="color: #98be65;">()</span><span style="color: #c678dd;">){</span>
+       <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>s.peek<span style="color: #a9a1e1;">()</span> &gt; max<span style="color: #98be65;">){</span>
+           max = s.peek<span style="color: #a9a1e1;">()</span>;
+        <span style="color: #98be65;">}</span>
+       s2.push<span style="color: #98be65;">(</span>s.pop<span style="color: #a9a1e1;">()</span><span style="color: #98be65;">)</span>;
+    <span style="color: #c678dd;">}</span>
+
+    <span style="color: #51afef;">while</span><span style="color: #c678dd;">(</span><span style="color: #51afef; font-weight: bold;">!</span>s2.isEmpty<span style="color: #98be65;">()</span><span style="color: #c678dd;">){</span>
+        <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>s2.peek == max<span style="color: #98be65;">)</span>
+            s2.pop<span style="color: #98be65;">()</span>;
+        <span style="color: #51afef;">else</span>
+            s.push<span style="color: #98be65;">(</span>s2.pop<span style="color: #98be65;">)</span>;
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9150803" class="outline-2">
+<h2 id="org9150803"><span class="section-number-2">7.</span> Palindrome checker</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+We have to push till the middle of the string, then pop. We need to check if the length of the string is even or odd of course. If it&rsquo;s odd, then we have to skip the middle character.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcf0cd58" class="outline-2">
+<h2 id="orgcf0cd58"><span class="section-number-2">8.</span> Recursive algorithms</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+As previously discussed, algorithms can be iterative or recursive.
+</p>
+
+<p>
+A recursive algorithm is an algorithm that defines itself by itself.
+</p>
+
+<p>
+All recursive algorithms use a stack.
+</p>
+
+<p>
+The simplest recursive algorithm is the factorial algorithm.
+</p>
+
+<p>
+\(fac(n) = n * fac(n-1)\)
+</p>
+
+<p>
+And we need a starting point. That&rsquo;s f should be limited to a minimum of 1.
+</p>
+</div>
+<div id="outline-container-org5ece896" class="outline-3">
+<h3 id="org5ece896"><span class="section-number-3">8.1.</span> Recursive algorithm for sum</h3>
+<div class="outline-text-3" id="text-8-1">
+<div class="org-src-container">
+<pre class="src src-java">    <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">sum</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">n</span><span style="color: #51afef;">){</span>
+        <span style="color: #51afef;">if</span><span style="color: #c678dd;">(</span>n &lt;= <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">)</span> <span style="color: #51afef;">return</span> <span style="color: #da8548; font-weight: bold;">1</span>;
+        <span style="color: #51afef;">return</span> n + sum<span style="color: #c678dd;">(</span>n-<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">)</span>;
+    <span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org56044d2" class="outline-3">
+<h3 id="org56044d2"><span class="section-number-3">8.2.</span> Recursive algorithm for countdown</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+This is an example of a &ldquo;tail-recursive&rdquo; algorithm, where the function calls itself at the end.
+</p>
+
+<p>
+This is more ideal as the compiler can usually optimize such algorithms.
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">count</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">n</span><span style="color: #51afef;">){</span>
+    <span style="color: #51afef;">if</span><span style="color: #c678dd;">(</span>n&lt;<span style="color: #da8548; font-weight: bold;">0</span><span style="color: #c678dd;">)</span> <span style="color: #51afef;">return</span>;
+    System.out.print<span style="color: #c678dd;">(</span>n<span style="color: #c678dd;">)</span>;
+    count<span style="color: #c678dd;">(</span>n-<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+<div id="outline-container-org9fdb7a8" class="outline-4">
+<h4 id="org9fdb7a8"><span class="section-number-4">8.2.1.</span> Putting the print statement after the recursive order</h4>
+<div class="outline-text-4" id="text-8-2-1">
+<p>
+This will cause the output to be reversed, the &ldquo;correct order&rdquo;
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaec8b1c" class="outline-3">
+<h3 id="orgaec8b1c"><span class="section-number-3">8.3.</span> Overall</h3>
+<div class="outline-text-3" id="text-8-3">
+<ul class="org-ul">
+<li>The function must have a stop method</li>
+<li>The function must call itself with a smaller or different input</li>
+<li>Try to solve the problem for 1 small solution</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgec10b3d" class="outline-3">
+<h3 id="orgec10b3d"><span class="section-number-3">8.4.</span> Uses</h3>
+<div class="outline-text-3" id="text-8-4">
+<ul class="org-ul">
+<li>Non-linear data types</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org3304bc6" class="outline-2">
+<h2 id="org3304bc6"><span class="section-number-2">9.</span> Extra notes</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<div id="outline-container-org154cb20" class="outline-3">
+<h3 id="org154cb20"><span class="section-number-3">9.1.</span> Context Free Grammar</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+Used in compilers, best way to implement it is a stack
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Kenan Ismail</p>
+<p class="date">Created: 2023-03-22 Wed 11:50</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-22 Wed 11:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lect12 Searching</title>
+<meta name="author" content="Kenan Ismail" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Lect12 Searching</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgb20ce0c">1. Searching</a>
+<ul>
+<li><a href="#org1722d6c">1.1. Sequential search</a>
+<ul>
+<li><a href="#org54859fe">1.1.1. Strategy</a></li>
+<li><a href="#org7c78e43">1.1.2. Implementation</a></li>
+<li><a href="#org66e769a">1.1.3. Implementation - Stack</a></li>
+</ul>
+</li>
+<li><a href="#orgca143ab">1.2. Binary search</a>
+<ul>
+<li><a href="#org3473140">1.2.1. Implementation</a></li>
+</ul>
+</li>
+<li><a href="#org84427a3">1.3. Hashing</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb20ce0c" class="outline-2">
+<h2 id="orgb20ce0c"><span class="section-number-2">1.</span> Searching</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org1722d6c" class="outline-3">
+<h3 id="org1722d6c"><span class="section-number-3">1.1.</span> Sequential search</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-org54859fe" class="outline-4">
+<h4 id="org54859fe"><span class="section-number-4">1.1.1.</span> Strategy</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<ul class="org-ul">
+<li>If we find the key, return the index of the item</li>
+<li>Otherwise, return -1</li>
+<li>Complexity
+<ul class="org-ul">
+<li>Worst and Average case: \(O(n)\)</li>
+<li>Best case: \(O(1)\) (this is if the key was the first item in the container)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7c78e43" class="outline-4">
+<h4 id="org7c78e43"><span class="section-number-4">1.1.2.</span> Implementation</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">sequentialSearch</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">[]</span> <span style="color: #dcaeea;">A</span>, <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">key</span><span style="color: #51afef;">){</span>
+    <span style="color: #51afef;">for</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>; i &lt; A.<span style="color: #ECBE7B;">length</span>; i++<span style="color: #c678dd;">)</span>
+        <span style="color: #51afef;">if</span><span style="color: #c678dd;">(</span>A<span style="color: #98be65;">[</span>i<span style="color: #98be65;">]</span>.equals<span style="color: #98be65;">(</span>key<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+            <span style="color: #51afef;">return</span> i;
+    <span style="color: #51afef;">return</span> -<span style="color: #da8548; font-weight: bold;">1</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org66e769a" class="outline-4">
+<h4 id="org66e769a"><span class="section-number-4">1.1.3.</span> Implementation - Stack</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+In a stack we can only find if the key exists or not (we don&rsquo;t have indices)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">boolean</span> <span style="color: #c678dd;">searchStack</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Stack</span> <span style="color: #dcaeea;">S</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">key</span><span style="color: #51afef;">){</span>
+    <span style="color: #51afef;">while</span><span style="color: #c678dd;">(</span><span style="color: #51afef; font-weight: bold;">!</span>S.isEmpty<span style="color: #98be65;">()</span><span style="color: #c678dd;">){</span>
+        <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>S.pop<span style="color: #a9a1e1;">()</span>.equals<span style="color: #a9a1e1;">(</span>key<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+            <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">true</span>;
+    <span style="color: #c678dd;">}</span>
+    <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">false</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgca143ab" class="outline-3">
+<h3 id="orgca143ab"><span class="section-number-3">1.2.</span> Binary search</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>We must first <b>SORT</b> the container</li>
+<li>Process:
+<ul class="org-ul">
+<li>Go to the middle
+<ul class="org-ul">
+<li>If the middle is equal to the key, return the middle</li>
+</ul></li>
+<li>else, if the middle is greater than the key, then binary search the left half</li>
+<li>otherwise binary search the right half</li>
+</ul></li>
+<li>Complexity
+<ul class="org-ul">
+<li>Best case: \(O(1)\) when the key is in the middle</li>
+<li>Worst and average case: \(O(\log n)\)</li>
+</ul></li>
+<li>Stops searching when \(\frac{n}{2^k} = 1\)</li>
+</ul>
+</div>
+<div id="outline-container-org3473140" class="outline-4">
+<h4 id="org3473140"><span class="section-number-4">1.2.1.</span> Implementation</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">public</span> <span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">BS</span><span style="color: #51afef;">{</span>
+    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #c678dd;">(){</span>
+        <span style="color: #ECBE7B;">int</span><span style="color: #98be65;">[]</span> <span style="color: #dcaeea;">someNumbers</span> = <span style="color: #98be65;">{</span><span style="color: #da8548; font-weight: bold;">1</span>,<span style="color: #da8548; font-weight: bold;">2</span>,<span style="color: #da8548; font-weight: bold;">3</span>,<span style="color: #da8548; font-weight: bold;">4</span>,<span style="color: #da8548; font-weight: bold;">5</span>,<span style="color: #da8548; font-weight: bold;">6</span>,<span style="color: #da8548; font-weight: bold;">7</span>,<span style="color: #da8548; font-weight: bold;">8</span><span style="color: #98be65;">}</span>;
+        System.out.print<span style="color: #98be65;">(</span>binarySearchWrapper<span style="color: #a9a1e1;">(</span>someNumbers, <span style="color: #da8548; font-weight: bold;">3</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>;
+    <span style="color: #c678dd;">}</span>
+
+    <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">binarySearchWrapper</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">int</span><span style="color: #98be65;">[]</span> <span style="color: #dcaeea;">A</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">key</span><span style="color: #c678dd;">){</span>
+        <span style="color: #51afef;">return</span> BSR<span style="color: #98be65;">(</span>A, <span style="color: #da8548; font-weight: bold;">0</span>, A.length - <span style="color: #da8548; font-weight: bold;">1</span>, key<span style="color: #98be65;">)</span>;
+    <span style="color: #c678dd;">}</span>
+
+    <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">BSR</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">int</span><span style="color: #98be65;">[]</span> <span style="color: #dcaeea;">A</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">left</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">right</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">key</span><span style="color: #c678dd;">){</span>
+        <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>left &gt; right<span style="color: #98be65;">)</span>
+            <span style="color: #51afef;">return</span> -<span style="color: #da8548; font-weight: bold;">1</span>;
+        <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">mid</span> = <span style="color: #98be65;">(</span>left + right<span style="color: #98be65;">)</span> / <span style="color: #da8548; font-weight: bold;">2</span>;
+        <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>A<span style="color: #a9a1e1;">[</span>mid<span style="color: #a9a1e1;">]</span> == key<span style="color: #98be65;">)</span>
+            <span style="color: #51afef;">return</span> mid;
+        <span style="color: #51afef;">if</span><span style="color: #98be65;">(</span>A<span style="color: #a9a1e1;">[</span>mid<span style="color: #a9a1e1;">]</span> &lt; key<span style="color: #98be65;">)</span>
+            <span style="color: #51afef;">return</span> BSR<span style="color: #98be65;">(</span>A, mid + <span style="color: #da8548; font-weight: bold;">1</span>, right, key<span style="color: #98be65;">)</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">mid+1 because we already checked mid itself</span>
+        <span style="color: #51afef;">else</span>
+            <span style="color: #51afef;">return</span> BSR<span style="color: #98be65;">(</span>A, left, mid - <span style="color: #da8548; font-weight: bold;">1</span>, key<span style="color: #98be65;">)</span>;
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org84427a3" class="outline-3">
+<h3 id="org84427a3"><span class="section-number-3">1.3.</span> Hashing</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>Complexity: \(O(1)\)</li>
+<li>The only condition is that no two inputs have the same hash key</li>
+<li>Extra info: The hash key is sometimes used as the primary key in databases</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #5B6268;">//</span><span style="color: #5B6268;">Takes a phone number and returns a unique index</span>
+<span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">hashing</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">num</span><span style="color: #51afef;">){</span>
+    <span style="color: #51afef;">return</span> parseInt<span style="color: #c678dd;">(</span>num<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Kenan Ismail</p>
+<p class="date">Created: 2023-03-22 Wed 11:50</p>
+</div>
+</body>
+</html>

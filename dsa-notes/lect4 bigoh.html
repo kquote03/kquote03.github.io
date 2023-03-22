@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-22 Wed 11:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lect4 Bigoh</title>
+<meta name="author" content="Kenan Ismail" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Lect4 Bigoh</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd516e21">1. Lower polynomials don&rsquo;t matter</a></li>
+<li><a href="#org1c2a90e">2. another rule</a></li>
+<li><a href="#orgf4b4982">3. General guidelines</a>
+<ul>
+<li><a href="#org3a21458">3.1. If the number of instructions doesn&rsquo;t depend on the input</a></li>
+<li><a href="#org4cc6c37">3.2. If we have nested loops we do multiplication</a></li>
+<li><a href="#orgd97c796">3.3. If the increase / decrease in a loop is * or / then O(log(n))</a></li>
+</ul>
+</li>
+<li><a href="#org9abe79f">4. Examples</a>
+<ul>
+<li><a href="#org24f2917">4.1. 1</a></li>
+<li><a href="#org8d49488">4.2. 2</a></li>
+<li><a href="#org4eb0b2a">4.3. 3</a></li>
+<li><a href="#orgdc87310">4.4. 4</a></li>
+<li><a href="#org3989387">4.5. 5</a></li>
+<li><a href="#org3d28b5d">4.6. solution</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+f(n) = g(n)
+</p>
+
+<p>
+if \(f(n)=n^2+100n+100\), then \(g(n)\) will always be less than \(c \times n^2\), so we say that f(n) is \(O(n^2)\)
+</p>
+<div id="outline-container-orgd516e21" class="outline-2">
+<h2 id="orgd516e21"><span class="section-number-2">1.</span> Lower polynomials don&rsquo;t matter</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+for \(a_kn^k + a_{k-1}n^{k-1} + ... + an + 1\) then we immediately look at the highest power and \(O(n^k)\) immediately take it.
+</p>
+</div>
+</div>
+<div id="outline-container-org1c2a90e" class="outline-2">
+<h2 id="org1c2a90e"><span class="section-number-2">2.</span> another rule</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+if we have \(f_1(n) + f_2(n) + f_3(n)\) then \(O(max(f_1, f_2, f_3))\)
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf4b4982" class="outline-2">
+<h2 id="orgf4b4982"><span class="section-number-2">3.</span> General guidelines</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org3a21458" class="outline-3">
+<h3 id="org3a21458"><span class="section-number-3">3.1.</span> If the number of instructions doesn&rsquo;t depend on the input</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+It is usually \(O(1)\), since there are a constant number of commands.
+</p>
+</div>
+</div>
+<div id="outline-container-org4cc6c37" class="outline-3">
+<h3 id="org4cc6c37"><span class="section-number-3">3.2.</span> If we have nested loops we do multiplication</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+For example
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> =<span style="color: #da8548; font-weight: bold;">0</span>; i&lt;<span style="color: #ECBE7B;">n</span>; i++<span style="color: #51afef;">)</span>
+    <span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">j</span> = <span style="color: #da8548; font-weight: bold;">2</span>; <span style="color: #da8548; font-weight: bold;">1</span>&lt;n; j+=<span style="color: #da8548; font-weight: bold;">5</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+<p>
+Here we have \(O(n) * O(n)\) which results in \(O(n^2)\)
+</p>
+</div>
+</div>
+<div id="outline-container-orgd97c796" class="outline-3">
+<h3 id="orgd97c796"><span class="section-number-3">3.3.</span> If the increase / decrease in a loop is * or / then O(log(n))</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+For example
+</p>
+
+<p>
+<code>for(int i = 1; i&lt;=n; i=i*i)</code> is \(O(log(n))\)
+</p>
+
+<p>
+<code>for(int i = 1; i&lt;=n; i=i/2)</code> is \(O(log(n))\)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org9abe79f" class="outline-2">
+<h2 id="org9abe79f"><span class="section-number-2">4.</span> Examples</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org24f2917" class="outline-3">
+<h3 id="org24f2917"><span class="section-number-3">4.1.</span> 1</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>; i&lt;<span style="color: #ECBE7B;">n</span>*n; i+=<span style="color: #da8548; font-weight: bold;">100</span><span style="color: #51afef;">)</span> <span style="color: #5B6268;">//</span><span style="color: #5B6268;">O(n^2)</span>
+    <span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">j</span> = n/<span style="color: #da8548; font-weight: bold;">2</span>; j&gt;<span style="color: #da8548; font-weight: bold;">1</span>; j--<span style="color: #51afef;">)</span> <span style="color: #5B6268;">//</span><span style="color: #5B6268;">O(n)</span>
+</pre>
+</div>
+
+<p>
+Here it&rsquo;s \(O(n^2)\)
+</p>
+
+<p>
+But we can say that it&rsquo;s \(O(n^3)\) or even \(O(n^1000)\) that&rsquo;s because the alogrithm will never exceed those as well, however, we generally ask for the &rsquo;tightest&rsquo; big-Oh
+</p>
+</div>
+</div>
+<div id="outline-container-org8d49488" class="outline-3">
+<h3 id="org8d49488"><span class="section-number-3">4.2.</span> 2</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>; i&lt;<span style="color: #ECBE7B;">n</span>; i++<span style="color: #51afef;">)</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">O(n)</span>
+    <span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">j</span> =n; j&lt;=<span style="color: #da8548; font-weight: bold;">1</span>; j=j/<span style="color: #da8548; font-weight: bold;">2</span><span style="color: #51afef;">)</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">O(log(n))</span>
+</pre>
+</div>
+
+<p>
+This will be \(O( O(n) * O(log(n)) )\) &larr; \(O(nlog(n))\)
+</p>
+</div>
+</div>
+<div id="outline-container-org4eb0b2a" class="outline-3">
+<h3 id="org4eb0b2a"><span class="section-number-3">4.3.</span> 3</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> =<span style="color: #da8548; font-weight: bold;">1</span>; i&lt;<span style="color: #ECBE7B;">n</span>; i++<span style="color: #51afef;">)</span>
+    <span style="color: #51afef;">for</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">j</span> = <span style="color: #da8548; font-weight: bold;">1</span>; j&lt;<span style="color: #ECBE7B;">m</span>; j++<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+\(O(n\times m)\)
+</p>
+</div>
+</div>
+<div id="outline-container-orgdc87310" class="outline-3">
+<h3 id="orgdc87310"><span class="section-number-3">4.4.</span> 4</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Let&rsquo;s say we have to algorithms, A<sub>1</sub> and A<sub>2</sub> , A<sub>1</sub> is O(n) and A<sub>2</sub> is O(n<sup>2</sup>)
+</p>
+
+<p>
+Let&rsquo;s say A<sub>2</sub> takes 1 hour to finish for an input of 100, how much time would it take to finish for a n input of 200?
+</p>
+
+<p>
+First of all in 1 hour we can do n<sup>2</sup>  &larr; (100)<sup>2</sup> operations, and an input of 200 would need (200)<sup>2</sup> operations. 1 hour = 10000 operations, 40000 operations = 4 hours!
+</p>
+
+<p>
+How much time would it take to finish using A<sub>1</sub>?
+</p>
+
+<p>
+Since we know we can do 10000 operations in hour, for an input of 100, A<sub>1</sub> would take \(\frac{100}{10000}\) so \(\frac{1}{100}\) hours.
+</p>
+</div>
+</div>
+<div id="outline-container-org3989387" class="outline-3">
+<h3 id="org3989387"><span class="section-number-3">4.5.</span> 5</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+Sort the following from fastest to slowest:
+</p>
+<ul class="org-ul">
+<li>n!</li>
+<li>1</li>
+<li>1/n (impossible)</li>
+<li>n<sup>n</sup></li>
+<li>2<sup>n</sup></li>
+<li>log(n)</li>
+<li>log(log(n)) (can be written as log<sup>2</sup>(n))</li>
+<li>n</li>
+<li>n<sup>1.5</sup></li>
+<li>n<sup>2</sup></li>
+<li>n<sup>3</sup></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3d28b5d" class="outline-3">
+<h3 id="org3d28b5d"><span class="section-number-3">4.6.</span> solution</h3>
+<div class="outline-text-3" id="text-4-6">
+<ul class="org-ul">
+<li>1</li>
+<li>log<sup>2</sup>(n)</li>
+<li>log(n)</li>
+<li>n</li>
+<li>nlog(n)</li>
+<li>n<sup>1.5</sup></li>
+<li>n<sup>2</sup></li>
+<li>n<sup>3</sup></li>
+<li>2<sup>n</sup></li>
+<li>3<sup>n</sup></li>
+<li>n!</li>
+<li>n<sup>n</sup></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Kenan Ismail</p>
+<p class="date">Created: 2023-03-22 Wed 11:50</p>
+</div>
+</body>
+</html>
